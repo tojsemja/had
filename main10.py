@@ -11,27 +11,34 @@ cerna=(0,0,0)
 
 green=(50,250,50)
 
+
+
+class Had:
+    def __init__ (self, start, dir=NORTH):
+        self.poloha_hada_xy
+        self.smer_
+
+## start = [(2x+1),y] for x in range(3)
+
 def prevede_cisla(pole_char):
     a=0
-    for i in pole_char:
-        a=a*10+int(i)
+    int(i)
     return a
 
 def cte(adresa):
     znak=[['']]
-    soubor=open(adresa)
-    blud=soubor.read()
-    j=0
-    k=0
-    for i in blud:
-        if i=='\n':
-            znak.append([i])
-            j=j+1
-            k=0
-        else:
-            znak[j].append(i)
-            k=k+1
-    soubor.close()
+    with open(adresa) as soubor:##lepsi nacitani
+        blud=soubor.read()
+        j=0
+        k=0
+        for i in blud:
+            if i=='\n':
+                znak.append([i])
+                j=j+1
+                k=0
+            else:
+                znak[j].append(i)
+                k=k+1
     del znak[0][0]
     return znak
 
@@ -61,10 +68,8 @@ def cte_barva(adresa):
 
 
 def kolize(x1,y1,r1,x2,y2,r2):
-    if(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))<(r1+r2)):
-        return 1
-    else:
-        return 2
+    return(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))<(r1+r2))
+
 def interval(cislo,okraj,kolik):
     ncmd=(int(random()*10000)*kolik)%cislo
     return ncmd

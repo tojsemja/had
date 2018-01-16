@@ -10,12 +10,98 @@ zluta=(150,150,0)
 cerna=(0,0,0)
 
 green=(50,250,50)
+class hadata:
+    def __init__(self,telo=[[1,1]],barva=zluta,klavesy,smer=1,smerova_klavesa=1):
+        self.telo=telo
+        self.barva=barva
+        self.klavesy=klavesy
+        self.smer=smer
+        self.smerova_klavesa=smerova_klavesa
 
-def prevede_cisla(pole_char):
-    a=0
-    for i in pole_char:
-        a=a*10+int(i)
-    return a
+    def posun(self,tela_ostatnich,poloha_zed_xy,poloha_cil_xy,rychlost):
+        for i in range (len(self.telo)-1):
+        
+            self.telo[-i-1][0]=self.telo[-i-2][0]
+
+            self.telo[-i-1][1]=self.telo[-i-2][1]        
+
+        if(self.smer==1):
+            self.telo[0][1]-=1
+        elif(self.smer==2):
+            self.telo[0][1]+=1
+        elif(self.smer==3):
+            self.telo[0][0]+=1
+        elif(self.smer==4):
+            self.telo[0][0]-=1
+            
+        if self.novy_smer==1:
+            self.smer=1
+        if self.novy_smer==2:
+            self.smer=2
+        if self.novy_smer==3:
+            self.smer=3
+        if self.novy_smer==4:
+            self.smer=4
+
+
+        if self.telo[0] in self.telo[1::]:
+                #print("harakiri")
+                konec=0
+
+            for j in range(len(tela_ostatnich)):
+                
+                if self.telo[0] in tela_ostatnich[j]:
+                    konec=0
+                    if len(self.telo)>1:
+                        if self.telo[1] in tela_ostatnich[j]:
+                            konec=1
+                        
+                    
+                
+                
+            if self.telo[0] in poloha_zed_xy:
+                #print("naraz")
+                konec=0
+        
+            elif(self.telo[0][0]==poloha_cil_xy[0] and self.telo[0[1]==poloha_cil_xy[1]):
+                #print("joj")
+                rychlost+=rychlost/10
+                
+                    
+                self.telo.append([-1,-1])
+                poloha_zed_xy.append([int(random()*1000%max_x),int(random()*1000%max_y)])
+            
+            ##pygame.draw.circle(kolecko,tyrkysova,(polomer,polomer), polomer, 0)
+            ##zvecovani velikosti kolecka
+            ##polomer+=2
+            ##for i in range (len(poloha_hada_x)-1):
+            ##    poloha_hada_x[i]+=1
+            ##for i in range (len(poloha_hada_y)-1):
+            ##    poloha_hada_y[i]+=1
+                poloha_cil_xy[0]=int(random()*1000)%max_x
+                poloha_cil_xy[1]=int(random()*1000)%max_y
+
+                pygame.time.set_timer(pygame.USEREVENT+2,int(1000//rychlost))
+
+
+    def ovladani(self):
+        if(event.key==(self.klavesy[0])):
+            if(self.smer!=2):
+                self.smerova_klavesa=1
+                    #print("jsem tu")
+        elif(event.key==(self.klavesy[i][1])):
+            if(self.smer[i]!=1):
+                self.smerova_klavesa=2
+                    #print("jsem tu")
+        elif(event.key==(self.klavesy[i][2])):
+            if(self.smer[i]!=4):
+                self.smerova_klavesa=3
+                    #print("jsem tu")
+        elif(event.key==(self.klavesy[i][3])):
+            if(self.smer[i]!=3):
+                self.smerova_klavesa=4
+                    #print("jsem tu")
+
 
 def cte(adresa):
     znak=[['']]
@@ -85,6 +171,7 @@ def posun(poloha_hada_xy,smer):
         poloha_hada_xy[0][0]+=1
     elif(smer==4):
         poloha_hada_xy[0][0]-=1
+        
 
     #print("ehm")
             
@@ -200,50 +287,9 @@ while(konec==1):
         time+=1
         
     if(event.type==(pygame.USEREVENT+2)):
-        for i in range(len(poloha_hada_xy)):
-            if novy_smer[i]==1:
-                smer[i]=1
-            if novy_smer[i]==2:
-                smer[i]=2
-            if novy_smer[i]==3:
-                smer[i]=3
-            if novy_smer[i]==4:
-                smer[i]=4
-            posun(poloha_hada_xy[i],smer[i])
-        
-            if poloha_hada_xy[i][0] in poloha_hada_xy[i][1::]:
-                #print("harakiri")
-                konec=0
-                
-            for j in range(len(poloha_hada_xy)):
-                if i != j:
-                    if poloha_hada_xy[i][0] in poloha_hada_xy[j]:
-                        #print:("srazka")
-                        konec=0
-                
-            if poloha_hada_xy[i][0] in poloha_zed_xy:
-                #print("naraz")
-                konec=0
-        
-            elif(poloha_hada_xy[i][0][0]==poloha_cil_xy[0] and poloha_hada_xy[i][0][1]==poloha_cil_xy[1]):
-                #print("joj")
-                rychlost+=rychlost/10
-                
-                    
-                poloha_hada_xy[i].append([-1,-1])
-                poloha_zed_xy.append([int(random()*1000%max_x),int(random()*1000%max_y)])
-            
-            ##pygame.draw.circle(kolecko,tyrkysova,(polomer,polomer), polomer, 0)
-            ##zvecovani velikosti kolecka
-            ##polomer+=2
-            ##for i in range (len(poloha_hada_x)-1):
-            ##    poloha_hada_x[i]+=1
-            ##for i in range (len(poloha_hada_y)-1):
-            ##    poloha_hada_y[i]+=1
-                poloha_cil_xy[0]=int(random()*1000)%max_x
-                poloha_cil_xy[1]=int(random()*1000)%max_y
 
-                pygame.time.set_timer(pygame.USEREVENT+2,int(1000//rychlost))
+        
+            
 
     if(event.type==pygame.KEYDOWN):###prepsat na nastavitelne
         

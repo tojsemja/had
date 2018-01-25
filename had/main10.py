@@ -38,9 +38,18 @@ class Had:
             self.body[0][0]+=1
         elif(self.smer==4):
             self.body[0][0]-=1
+            
+        if self.body[0][1]>=max_y:
+            self.body[0][1]=0
+        if self.body[0][1]<0:
+            self.body[0][1]=max_y-1     
+        if self.body[0][0]>=max_x:
+            self.body[0][0]=0
+        if self.body[0][0]<0:
+            self.body[0][0]=max_x-1
 
 
-    def move(self,casovac): ##poloha_zed_xy,poloha_cil_xy,max_x,max_y):
+    def move(self,casovac,mapa): ##poloha_zed_xy,poloha_cil_xy,max_x,max_y):
         if(event.type==(pygame.USEREVENT+casovac)):
             print("bu")
             if self.novy_smer==1:
@@ -52,41 +61,43 @@ class Had:
             if self.novy_smer==4:
                 self.smer=4
 
-
+            x=self.body[-1][0]
+            y=self.body[-1][1]
             self.posun()
-                
+            policko=mapa[self.body[0][0]][self.body[0][1]]
+            mapa[x][y]='o'
+            mapa[self.body[-1][0]][self.body[-1][1]]='h'
 
             
-            if self.body[0][1]>max_y:
-                self.body[0][1]=self.body[0][1]-max_y-1
-            if self.body[0][1]<0:
-                self.body[0][1]=self.body[0][1]+max_y+1
-                
-            if self.body[0][0]>max_x:
-                self.body[0][0]=self.body[0][0]-max_x-1
-            if self.body[0][0]<0:
-                self.body[0][0]=self.body[0][0]+max_x+1
-            
-            if self.body[0] in self.body[1::]:
+            if policko=='h':
                 print("harakiri")
                 konec=0
                 
-            if self.body[0] in poloha_zed_xy:
+            if policko=='z':
                 print("naraz")
                 konec=0
 
-            elif(self.body[0][0]==poloha_cil_xy[0] and self.body[0][1]==poloha_cil_xy[1]):
+            elif(policko=='c'):
                 print("joj")
                 self.rychlost+=self.rychlost//10
                 
                     
                 self.body.append([-1,-1])
+                i=0
                 poloha_zed_xy.append([int(random()*1000%max_x),int(random()*1000%max_y)])
                 poloha_cil_xy[0]=int(random()*1000)%max_x
                 poloha_cil_xy[1]=int(random()*1000)%max_y
+                while 1!=1 and i<10000 :
+                    i=i+1
+                    poloha_zed_xy.append([int(random()*1000%max_x),int(random()*1000%max_y)])
+                    poloha_cil_xy[0]=int(random()*1000)%max_x
+                    poloha_cil_xy[1]=int(random()*1000)%max_y
                 print(casovac)
                 pygame.time.set_timer(pygame.USEREVENT+casovac,1000//self.rychlost)
 
+                mapa[poloha_zed_xy[0][0]][poloha_zed_xy[0][1]]='z'
+                mapa[poloha_cil_xy[0]][poloha_cil_xy[1]]='c'
+                
     def nacteni(self,button):
         if(button==self.klavesy[0]):
             if(self.smer!=2):
@@ -133,11 +144,12 @@ screen = pygame.display.set_mode((width, height),)#pamatuje si obrazovku surface
 konec=1
 max_x=int(width/(polomer*2))
 max_y=int(height/(polomer*2))
+mapa=[['o' for i in range(max_y)] for j in range(max_x)]
 
 poloha_zed_xy=[[int(random()*1000%max_x),int(random()*1000%max_y)]]
-
+mapa[poloha_zed_xy[0][0]][poloha_zed_xy[0][1]]='z'
 poloha_cil_xy=[int(random()*1000)%max_x,int(random()*1000)%max_y]
-
+mapa[poloha_cil_xy[0]][poloha_cil_xy[1]]='c'
 
 
         
@@ -158,7 +170,7 @@ while(konec==1):
             
             i.nacteni(a)
     for i in range(pocet_hracu):
-        hadove[i].move(i+1+odsazeni)
+        hadove[i].move(i+1+odsazeni,mapa)
                 
         
 

@@ -92,6 +92,7 @@ text = pygame.font.SysFont('arial',text_size)
 skreen_text = text.render("Ahoj svete",True,tyrkysova,(0,0,0) )#vypisuje do skreenu na pozici (0,0) text.render("text",vyrovnat?(True),barva,Pozadi(None))
 screen.blit(skreen_text,(text_size,20))
 pygame.display.flip()
+ggfd
 if(rychlost<1000/2):
     
     pygame.time.set_timer(pygame.USEREVENT+1,1000)#pygame.time.set_timer(pzgame.USEREVENT+1,cas) tvori event kazdy cas

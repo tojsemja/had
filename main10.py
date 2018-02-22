@@ -13,6 +13,7 @@ green=(50,250,50)
 
 
 
+
 class Had:
     def __init__(self,polomer,barva,klavesy,jmeno ,rychlost=10 ,start=[1,1],smer=1,smer_novy=1):
         self.body=[start]
@@ -23,10 +24,9 @@ class Had:
         self.polomer=polomer
         self.barva=barva
         self.rychlost=rychlost
+        
         self.score = 0
         self.jmeno = str(jmeno)
-
-
 
     def posun(self):
         for i in range (len(self.body)-1):
@@ -149,15 +149,36 @@ class Had:
     def vypis_hada(self,screen):
         for i in self.body:
             pygame.draw.circle(screen, self.barva,(i[0]*self.polomer*2+self.polomer,i[1]*self.polomer*2+self.polomer),self.polomer,0)
+
+def cte_barva(adresa):
+    barvy=[[0]]
+    with open(adresa) as soubor:
+        
+        blud=soubor.readlines()
+    jmeno=[]
+    barva=[]
+    k=0
+    for i in range(len(blud)):
+        
+        inf=blud[i].split(' ')
+        if len(inf)<4:
+            k=k+1
+            continue
+        jmeno.append(inf[0])
+        barva.append([int(inf[1]),int(inf[2]),int(inf[3])])
+    #del barva[0]
+    #del jmeno[0]
+    return barva,i-k+1,jmeno
+
             
-pocet_hracu=2
+
 x=2
 polomer=10
 rychlost=10.0
 pricitani=0.3
-klavesy=[[pygame.K_UP,pygame.K_DOWN,pygame.K_RIGHT,pygame.K_LEFT],[pygame.K_w,pygame.K_s,pygame.K_d,pygame.K_a]]
-barva=[tyrkysova,green]
 
+barva,pocet_hracu,jmeno=cte_barva("barvy.txt")
+klavesy=[[pygame.K_UP,pygame.K_DOWN,pygame.K_RIGHT,pygame.K_LEFT],[pygame.K_w,pygame.K_s,pygame.K_d,pygame.K_a],[pygame.K_w,pygame.K_s,pygame.K_d,pygame.K_a],[pygame.K_w,pygame.K_s,pygame.K_d,pygame.K_a],[pygame.K_w,pygame.K_s,pygame.K_d,pygame.K_a],[pygame.K_w,pygame.K_s,pygame.K_d,pygame.K_a]]#Predelat na moznost navoleni ve hre
 pygame.init()
 cmd=0,0
 time=0
@@ -169,8 +190,9 @@ text_size=3*polomer
 pygame.time.set_timer(pygame.USEREVENT+1,int(1000/rychlost))
 pygame.time.set_timer(pygame.USEREVENT+2,1000)#pygame.time.set_timer(pzgame.USEREVENT+1,cas) tvori event kazdy cas
 odsazeni=2
-pygame.time.set_timer(pygame.USEREVENT+3,int(1000/rychlost))
-pygame.time.set_timer(pygame.USEREVENT+4,int(1000/rychlost))
+for i in range (pocet_hracu):
+    pygame.time.set_timer(pygame.USEREVENT+odsazeni+i+1,int(1000/rychlost))
+
 screen = pygame.display.set_mode((width, height),)#pamatuje si obrazovku surface - screen -cokoli do ni zapisu se da prikazem vykreslit
 konec=1
 samota=True
@@ -187,7 +209,7 @@ mapa[poloha_cil_xy[0]][poloha_cil_xy[1]]='c'
         
 
 ## start = [(2x+1),y] for x in range(3)
-hadove=[(Had(polomer,barva[x],klavesy[x],x,rychlost,[(int(random()*1000)%max_x),(int(random()*1000)%max_y)])) for x in range (pocet_hracu)]
+hadove=[(Had(polomer,barva[x],klavesy[x],jmeno[x],rychlost,[(int(random()*1000)%max_x),(int(random()*1000)%max_y)])) for x in range (pocet_hracu)]
 
 
 while(konec==1 and samota):           
@@ -226,13 +248,14 @@ while(konec==1 and samota):
 for i in range(len(hadove)):
     text = pygame.font.SysFont('arial', text_size)
     screen_text = text.render(str(hadove[i].jmeno),True,hadove[i].barva,(0,0,0) )
-    screen.blit(screen_text, (text_size*1.5*(i+1),text_size))
-    screen_text = text.render(str(hadove[i].score),True,hadove[i].barva,(0,0,0) )
-    screen.blit(screen_text, (text_size*1.5*(i+1),7*text_size))
+    screen.blit(screen_text, (text_size,(i+1)*text_size))
+    screen_text = text.render(str(hadove[i].score+1),True,hadove[i].barva,(0,0,0) )
+    screen.blit(screen_text, (text_size*(len(hadove[i].jmeno)+1),(i+1)*text_size))
 
 pygame.display.flip()
 
-wait(1000)
+while event.type!=pygame.KEYDOWN:
+    event=pygame.event.wait()
 
 pygame.quit()
 
